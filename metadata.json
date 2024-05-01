@@ -1,9 +1,9 @@
 {
-    "Identifier": "",
-    "Slug": "",
-    "Status": "",
-    "Title": "",
-    "Description": "",
+    "Identifier": "eos8vud",
+    "Slug": "squid",
+    "Status": "In progress",
+    "Title": "SQUID 3D shape generation",
+    "Description": "Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design.SQUID can generate chemically diverse molecules for arbitrary molecular shapes",
     "Mode": "",
     "Task": [],
     "Input": [],
@@ -12,8 +12,8 @@
     "Output Type": [],
     "Output Shape": "",
     "Interpretation": "",
-    "Tag": [],
-    "Publication": "",
-    "Source Code": "",
-    "License": ""
+    "Tag": "Compound generation",
+    "Publication": "https://arxiv.org/abs/2210.04893",
+    "Source Code": "https://github.com/keiradams/SQUID",
+    "License": "MIT"
 }

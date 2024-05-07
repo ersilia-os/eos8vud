@@ -3,7 +3,7 @@
     "Slug": "squid",
     "Status": "In progress",
     "Title": "SQUID 3D shape generation",
-    "Description": "Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design.SQUID can generate chemically diverse molecules for arbitrary molecular shapes",
+    "Description": "Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design. SQUID can generate chemically diverse molecules for arbitrary molecular shapes. Shape is defined by the input molecule.",
     "Mode": "Pretrained",
     "Task": ["Generative"],
     "Input": ["Compound"],

@@ -2,9 +2,9 @@ import torch
 import torch_geometric
 import torch_scatter
 import math
+import csv
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from copy import deepcopy
 import rdkit
 import rdkit.Chem
@@ -73,6 +73,13 @@ fp1 = FPSim2Engine(fp1_filename)
 
 with open(os.path.join(CHECKPOINTS_DIR, "reasonable_fp_cutoffs.json"), "r") as f:
     search_cutoffs = json.load(f)
+
+reference_smiles_list = []
+with open(os.path.join(CHECKPOINTS_DIR, "reference_smiles.txt"), "r") as f:
+    reader = csv.reader(f)
+    for r in reader:
+        reference_smiles_list += [r[0]]
+print(len(reference_smiles_list), reference_smiles_list[:5])
 
 # HYPERPARAMETERS for 3D graph generator
 pointCloudVar = 1. / (12. * 1.7) 
@@ -203,7 +210,13 @@ def get_seedable_smiles(smiles):
     print("molecule is not seedable")
     query = smiles
     results = fp0.similarity(query, search_cutoffs["atompair"], n_workers=1)
-    print(results)
+    if len(results) == 0:
+        results = fp1.similarity(query, search_cutoffs["morgan"], n_workers=1)
+    if len(results) == 0:
+        results = fp0.similarity(query, 0.0, n_workers=1)
+    idx = results[0][0]
+    print("new seedable molecule found")
+    return reference_smiles_list[idx]
 
 
 def generate_molecules(smiles):

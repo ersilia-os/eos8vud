@@ -26,5 +26,9 @@
     "Publication": "https://arxiv.org/abs/2210.04893",
     "Source Code": "https://github.com/keiradams/SQUID",
     "License": "MIT",
-    "S3": "https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip"
+    "S3": "https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip",
+    "DockerHub": "https://hub.docker.com/r/ersiliaos/eos8vud",
+    "Docker Architecture": [
+        "AMD64"
+    ]
 }

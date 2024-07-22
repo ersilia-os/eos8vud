@@ -23,13 +23,6 @@ def load_model(framework_dir, checkpoints_dir):
     return mdl
 
 
-def Float(x):
-    try:
-        return float(x)
-    except:
-        return None
-
-
 def String(x):
     x = str(x)
     if not x:
@@ -90,7 +83,7 @@ class Model(object):
             R = []
             for r in reader:
                 R += [
-                    {"outcome": [Float(x) for x in r]}
+                    {"outcome": [String(x) for x in r]}
                 ]  # <-- EDIT: Modify according to type of output (Float, String...)
         meta = {"outcome": h}
         result = {"result": R, "meta": meta}

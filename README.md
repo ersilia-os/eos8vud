@@ -26,6 +26,7 @@ Equivariant shape-conditioned generation of 3D molecules for ligand-based drug d
 ## Ersilia model URLs
 * [GitHub](https://github.com/ersilia-os/eos8vud)
 * [AWS S3](https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip)
+* [DockerHub](https://hub.docker.com/r/ersiliaos/eos8vud) (AMD64)
 
 ## Citation
 

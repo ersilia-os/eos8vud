@@ -8,20 +8,26 @@
     "Task": [
         "Generative"
     ],
+    "Source": "Local",
+    "Source Type": "External",
     "Input": [
         "Compound"
     ],
-    "Input Shape": "Single",
+    "Input Dimension": 1,
     "Output": [
         "Compound"
     ],
-    "Output Type": [
-        "String"
-    ],
-    "Output Shape": "List",
+    "Output Dimension": 10,
+    "Output Consistency": "Variable",
     "Interpretation": "Molecules matching the 3D shape of the input compound are suggested",
     "Tag": [
-        "Compound generation"
+        "Compound Generation"
+    ],
+    "Biomedical Area": [
+        "Any"
+    ],
+    "Target Organism": [
+        "Any"
     ],
     "Publication": "https://arxiv.org/abs/2210.04893",
     "Source Code": "https://github.com/keiradams/SQUID",
@@ -30,5 +36,6 @@
     "DockerHub": "https://hub.docker.com/r/ersiliaos/eos8vud",
     "Docker Architecture": [
         "AMD64"
-    ]
+    ],
+    "Release": "v1.0.0",
 }

@@ -7,8 +7,7 @@ Description: |
   SQUID can generate chemically diverse molecules for arbitrary molecular shapes.
   Shape is defined by the input molecule.
 Mode: Pretrained
-Task:
-  - Generative
+Task: Generative
 Source: Local
 Source Type: External
 Input:

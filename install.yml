@@ -4,7 +4,7 @@ commands:
   - ["pip", "torch", "1.11.0", "--extra-index-url", "https://download.pytorch.org/whl/cpu"]
   - ["pip", "torchvision", "0.12.0", "--extra-index-url", "https://download.pytorch.org/whl/cpu"]
   - ["pip", "torch-geometric", "2.5.3"]
-  - ["pip", "--no-build-isolation", "torch-scatter", "2.1.2", "-f", "https://data.pyg.org/whl/torch-1.11.0+cpu.html"]
+  - ["pip", "torch-scatter", "2.1.2", "--no-build-isolation", "-f", "https://data.pyg.org/whl/torch-1.11.0+cpu.html"]
   - ["pip", "pandas", "2.2.2"]
   - ["pip", "rdkit", "2023.09.06"]
   - ["pip", "networkx", "3.3"]

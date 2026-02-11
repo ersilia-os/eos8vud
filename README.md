@@ -29,16 +29,16 @@ This model was incorporated on 2024-05-01.
 Below are the **Output Columns** of the model:
 | Name | Type | Direction | Description |
 |------|------|-----------|-------------|
-| smi-000 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-001 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-002 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-003 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-004 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-005 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-006 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-007 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-008 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi-009 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_000 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_001 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_002 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_003 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_004 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_005 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_006 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_007 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_008 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_009 | string |  | This input index was calculated using the pretrained SQUID model |
 
 
 ### Source and Deployment

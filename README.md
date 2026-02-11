@@ -2,44 +2,88 @@
 
 Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design. SQUID can generate chemically diverse molecules for arbitrary molecular shapes. Shape is defined by the input molecule.
 
-## Identifiers
+This model was incorporated on 2024-05-01.
 
-* EOS model ID: `eos8vud`
-* Slug: `squid`
 
-## Characteristics
+## Information
+### Identifiers
+- **Ersilia Identifier:** `eos8vud`
+- **Slug:** `squid`
 
-* Input: `Compound`
-* Input Shape: `Single`
-* Task: `Generative`
-* Output: `Compound`
-* Output Type: `String`
-* Output Shape: `List`
-* Interpretation: Molecules matching the 3D shape of the input compound are suggested
+### Domain
+- **Task:** `Sampling`
+- **Subtask:** `Generation`
+- **Biomedical Area:** `Any`
+- **Target Organism:** `Any`
+- **Tags:** `Compound generation`
 
-## References
+### Input
+- **Input:** `Compound`
+- **Input Dimension:** `1`
 
-* [Publication](https://arxiv.org/abs/2210.04893)
-* [Source Code](https://github.com/keiradams/SQUID)
-* Ersilia contributor: [miquelduranfrigola](https://github.com/miquelduranfrigola)
+### Output
+- **Output Dimension:** `10`
+- **Output Consistency:** `Variable`
+- **Interpretation:** Molecules matching the 3D shape of the input compound are suggested
 
-## Ersilia model URLs
-* [GitHub](https://github.com/ersilia-os/eos8vud)
-* [AWS S3](https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip)
-* [DockerHub](https://hub.docker.com/r/ersiliaos/eos8vud) (AMD64)
+Below are the **Output Columns** of the model:
+| Name | Type | Direction | Description |
+|------|------|-----------|-------------|
+| smi-000 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-001 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-002 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-003 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-004 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-005 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-006 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-007 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-008 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi-009 | string |  | This input index was calculated using the pretrained SQUID model |
 
-## Citation
 
-If you use this model, please cite the [original authors](https://arxiv.org/abs/2210.04893) of the model and the [Ersilia Model Hub](https://github.com/ersilia-os/ersilia/blob/master/CITATION.cff).
+### Source and Deployment
+- **Source:** `Local`
+- **Source Type:** `External`
+- **DockerHub**: [https://hub.docker.com/r/ersiliaos/eos8vud](https://hub.docker.com/r/ersiliaos/eos8vud)
+- **Docker Architecture:** `AMD64`
+- **S3 Storage**: [https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip](https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip)
 
-## License
+### Resource Consumption
 
-This package is licensed under a GPL-3.0 license. The model contained within this package is licensed under a MIT license.
 
-Notice: Ersilia grants access to these models 'as is' provided by the original authors, please refer to the original code repository and/or publication if you use the model in your research.
+### References
+- **Source Code**: [https://github.com/keiradams/SQUID](https://github.com/keiradams/SQUID)
+- **Publication**: [https://arxiv.org/abs/2210.04893](https://arxiv.org/abs/2210.04893)
+- **Publication Type:** `Peer reviewed`
+- **Publication Year:** `2022`
+- **Ersilia Contributor:** [miquelduranfrigola](https://github.com/miquelduranfrigola)
 
-## About Us
+### License
+This package is licensed under a [GPL-3.0](https://github.com/ersilia-os/ersilia/blob/master/LICENSE) license. The model contained within this package is licensed under a [MIT](LICENSE) license.
 
-The [Ersilia Open Source Initiative](https://ersilia.io) is a Non Profit Organization ([1192266](https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/5170657/full-print)) with the mission is to equip labs, universities and clinics in LMIC with AI/ML tools for infectious disease research.
+**Notice**: Ersilia grants access to models _as is_, directly from the original authors, please refer to the original code repository and/or publication if you use the model in your research.
 
-[Help us](https://www.ersilia.io/donate) achieve our mission!
+
+## Use
+To use this model locally, you need to have the [Ersilia CLI](https://github.com/ersilia-os/ersilia) installed.
+The model can be **fetched** using the following command:
+```bash
+# fetch model from the Ersilia Model Hub
+ersilia fetch eos8vud
+```
+Then, you can **serve**, **run** and **close** the model as follows:
+```bash
+# serve the model
+ersilia serve eos8vud
+# generate an example file
+ersilia example -n 3 -f my_input.csv
+# run the model
+ersilia run -i my_input.csv -o my_output.csv
+# close the model
+ersilia close
+```
+
+## About Ersilia
+The [Ersilia Open Source Initiative](https://ersilia.io) is a tech non-profit organization fueling sustainable research in the Global South.
+Please [cite](https://github.com/ersilia-os/ersilia/blob/master/CITATION.cff) the Ersilia Model Hub if you've found this model to be useful. Always [let us know](https://github.com/ersilia-os/ersilia/issues) if you experience any issues while trying to run it.
+If you want to contribute to our mission, consider [donating](https://www.ersilia.io/donate) to Ersilia!

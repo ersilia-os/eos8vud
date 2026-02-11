@@ -20,7 +20,7 @@ Output Dimension: 10
 Output Consistency: Variable
 Interpretation: Molecules matching the 3D shape of the input compound are suggested
 Tag:
-  - Compound Generation
+  - Compound generation
 Biomedical Area:
   - Any
 Target Organism:

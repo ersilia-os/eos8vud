@@ -2,8 +2,7 @@
 
 Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design. SQUID can generate chemically diverse molecules for arbitrary molecular shapes. Shape is defined by the input molecule.
 
-This model was incorporated on 2024-05-01.
-
+This model was incorporated on 2024-05-01.Last packaged on 2026-02-13.
 
 ## Information
 ### Identifiers
@@ -45,13 +44,18 @@ Below are the **Output Columns** of the model:
 - **Source:** `Local`
 - **Source Type:** `External`
 - **DockerHub**: [https://hub.docker.com/r/ersiliaos/eos8vud](https://hub.docker.com/r/ersiliaos/eos8vud)
-- **Docker Architecture:** `AMD64`
+- **Docker Architecture:** `AMD64`, `ARM64`
 - **S3 Storage**: [https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip](https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip)
 
 ### Resource Consumption
 - **Model Size (Mb):** `371`
 - **Environment Size (Mb):** `2594`
+- **Image Size (Mb):** `1095.44`
 
+**Computational Performance (seconds):**
+- 10 inputs: `31.49`
+- 100 inputs: `1551.03`
+- 10000 inputs: `-1`
 
 ### References
 - **Source Code**: [https://github.com/keiradams/SQUID](https://github.com/keiradams/SQUID)

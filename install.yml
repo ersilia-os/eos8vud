@@ -8,5 +8,5 @@ commands:
   - ["pip", "pandas", "2.2.2"]
   - ["pip", "rdkit", "2023.09.06"]
   - ["pip", "networkx", "3.3"]
-  - ["pip", "numpy", "1.26.4"]
+  - ['conda', 'numpy', '1.26.4', 'conda-forge', '-y']
   - ["pip", "cdpkit", "1.1.1"]

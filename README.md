@@ -59,7 +59,7 @@ Below are the **Output Columns** of the model:
 
 ### References
 - **Source Code**: [https://github.com/keiradams/SQUID](https://github.com/keiradams/SQUID)
-- **Publication**: [https://arxiv.org/abs/2210.04893](https://arxiv.org/abs/2210.04893)
+- **Publication**: [https://doi.org/10.48550/arXiv.2210.04893](https://doi.org/10.48550/arXiv.2210.04893)
 - **Publication Type:** `Peer reviewed`
 - **Publication Year:** `2022`
 - **Ersilia Contributor:** [miquelduranfrigola](https://github.com/miquelduranfrigola)

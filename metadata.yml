@@ -1,6 +1,6 @@
 Identifier: eos8vud
 Slug: squid
-Status: In maintenance
+Status: Ready
 Title: SQUID 3D shape generation
 Description: Equivariant shape-conditioned generation of 3D molecules for 
   ligand-based drug design. SQUID can generate chemically diverse molecules for 
@@ -31,7 +31,7 @@ Source Code: https://github.com/keiradams/SQUID
 License: MIT
 Contributor: miquelduranfrigola
 Incorporation Date: '2024-05-01'
-Last Packaging Date: '2026-02-13'
+Last Packaging Date: '2026-07-31'
 Release: v1.0.0
 S3: https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip
 DockerHub: https://hub.docker.com/r/ersiliaos/eos8vud
@@ -40,10 +40,10 @@ Docker Architecture:
   - ARM64
 Model Size: 371.0
 Environment Size: 2605.0
-Image Size: 1095.44
-Computational Performance 1: 31.49
-Computational Performance 2: 189.94
-Computational Performance 3: 1551.03
+Image Size: 3043.83
+Computational Performance 1: 30.83
+Computational Performance 2: 191.54
+Computational Performance 3: 1572.27
 Computational Performance 4: -1.0
 Computational Performance 5: -1.0
 Mode: Pretrained

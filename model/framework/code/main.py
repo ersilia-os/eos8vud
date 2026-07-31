@@ -48,8 +48,8 @@ def sample(input_smiles: str, cache: Dict[str, List[str]]) -> List[str]:
     seen = set()
     out: List[str] = []
 
-    for s in to_list(
-        generate_molecules(
+    try:
+        generated = generate_molecules(
             input_smiles,
             target_samples=10,
             n_conformers=5,
@@ -57,9 +57,12 @@ def sample(input_smiles: str, cache: Dict[str, List[str]]) -> List[str]:
             reps_per_seed=10,
             max_total_attempts=100,
             seed_base=0,
-            
         )
-    ):
+    except Exception as e:
+        print(f"[ERROR] generate_molecules failed for {input_smiles!r}: {type(e).__name__}: {e}")
+        generated = []
+
+    for s in to_list(generated):
         cs = canon(s)
         if cs and cs not in seen:
             seen.add(cs)

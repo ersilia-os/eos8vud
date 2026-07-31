@@ -2,7 +2,7 @@
 
 Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design. SQUID can generate chemically diverse molecules for arbitrary molecular shapes. Shape is defined by the input molecule.
 
-This model was incorporated on 2024-05-01.Last packaged on 2026-02-13.
+This model was incorporated on 2024-05-01.Last packaged on 2026-07-31.
 
 ## Information
 ### Identifiers
@@ -50,11 +50,11 @@ Below are the **Output Columns** of the model:
 ### Resource Consumption
 - **Model Size (Mb):** `371`
 - **Environment Size (Mb):** `2605`
-- **Image Size (Mb):** `1095.44`
+- **Image Size (Mb):** `3043.83`
 
 **Computational Performance (seconds):**
-- 10 inputs: `31.49`
-- 100 inputs: `1551.03`
+- 10 inputs: `30.83`
+- 100 inputs: `1572.27`
 - 10000 inputs: `-1`
 
 ### References

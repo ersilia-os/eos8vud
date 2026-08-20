@@ -1,6 +1,6 @@
 # SQUID 3D shape generation
 
-Equivariant shape-conditioned generation of 3D molecules for ligand-based drug design. SQUID can generate chemically diverse molecules for arbitrary molecular shapes. Shape is defined by the input molecule.
+Generates ten molecules matching the three-dimensional shape of a reference compound while allowing the chemistry to change, the essence of ligand-based scaffold hopping. SQUID, from Adams and Coley, uses an equivariant network so that generation respects rotation and translation, conditioning on shape rather than on the molecular graph. Because sampling is stochastic and shape is matched approximately, outputs vary between runs and still require assessment for synthetic feasibility.
 
 This model was incorporated on 2024-05-01.Last packaged on 2026-07-31.
 
@@ -23,7 +23,7 @@ This model was incorporated on 2024-05-01.Last packaged on 2026-07-31.
 ### Output
 - **Output Dimension:** `10`
 - **Output Consistency:** `Variable`
-- **Interpretation:** Molecules matching the 3D shape of the input compound are suggested
+- **Interpretation:** Ten generated molecules conditioned to match the three-dimensional shape of the input.
 
 Below are the **Output Columns** of the model:
 | Name | Type | Direction | Description |
@@ -60,8 +60,8 @@ Below are the **Output Columns** of the model:
 ### References
 - **Source Code**: [https://github.com/keiradams/SQUID](https://github.com/keiradams/SQUID)
 - **Publication**: [https://doi.org/10.48550/arXiv.2210.04893](https://doi.org/10.48550/arXiv.2210.04893)
-- **Publication Type:** `Peer reviewed`
-- **Publication Year:** `2022`
+- **Publication Type:** `Preprint`
+- **Publication Year:** `2023`
 - **Ersilia Contributor:** [miquelduranfrigola](https://github.com/miquelduranfrigola)
 
 ### License

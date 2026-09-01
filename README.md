@@ -28,16 +28,16 @@ This model was incorporated on 2024-05-01.Last packaged on 2026-07-31.
 Below are the **Output Columns** of the model:
 | Name | Type | Direction | Description |
 |------|------|-----------|-------------|
-| smi_000 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_001 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_002 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_003 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_004 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_005 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_006 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_007 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_008 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_009 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_0 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_1 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_2 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_3 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_4 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_5 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_6 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_7 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_8 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_9 | string |  | This input index was calculated using the pretrained SQUID model |
 
 
 ### Source and Deployment

@@ -45,7 +45,7 @@ Docker Architecture:
   - AMD64
   - ARM64
 Model Size: 371.0
-Environment Size: 2605.0
+Environment Size: 2607.0
 Image Size: 3043.83
 Computational Performance 1: 30.83
 Computational Performance 2: 191.54

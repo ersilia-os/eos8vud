@@ -92,7 +92,7 @@ def main():
             if row and row[0]:
                 smiles.append(row[0].strip())
 
-    header = [f"smi-{i:03d}" for i in range(10)]
+    header = [f"smi_{i:01d}" for i in range(10)]
     rows = [sample(s, cache) for s in smiles]
 
     with open(output_file, "w", newline="") as f:

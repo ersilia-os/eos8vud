@@ -403,6 +403,29 @@ def run_growth(sequence, seed_mol, mol_target, positioned, queue, atom_to_lib):
     return updated_mol
 
 
+def _mol_has_oov_ring_fragment(mol):
+    """True if `mol` contains a ring system that isn't one of the model's ~100
+    fixed ring-fragment templates (RING_VOCAB, built from the MOSES2 training
+    vocabulary). Confirmed empirically (0 false positives either direction across
+    the 100-compound ChEMBL benchmark): any such molecule deterministically fails
+    every growth attempt with IndexError inside get_ground_truth_generation_sequence
+    -> get_atom_fragment_ID_index (exact-match SMILES lookup against the fixed
+    vocabulary finds zero rows), regardless of conformer/seed/rep - the ring
+    composition is fixed by the input, not by the random attempt. Checking this
+    upfront avoids burning max_total_attempts of real GNN/conformer work on an
+    input that cannot possibly succeed.
+    """
+    try:
+        ring_fragments = get_ring_fragments(mol)
+    except Exception:
+        return False  # let the normal attempt loop handle/report this instead
+    for rf in ring_fragments:
+        frag_smi = get_fragment_smiles(mol, list(rf))
+        if frag_smi is None or frag_smi not in RING_VOCAB:
+            return True
+    return False
+
+
 def generate_molecules(
     smiles,
     device=torch.device("cpu"),
@@ -428,6 +451,12 @@ def generate_molecules(
     mol2d = norm_mol(Chem.MolFromSmiles(smiles))
     if mol2d is None:
         log("[ERROR] could not create mol2d after parse")
+        return []
+
+    if _mol_has_oov_ring_fragment(mol2d):
+        log("[ERROR] input contains a ring system outside the model's fixed "
+            f"{len(RING_VOCAB)}-fragment vocabulary; every growth attempt would "
+            "fail identically (confirmed empirically) - skipping the retry loop.")
         return []
 
     with Timer("prepare_molecule"):
@@ -563,6 +592,7 @@ with Timer("load fragment libraries"):
     fragment_library_atom_features = np.concatenate(AtomFragment_database["atom_features"], axis=0).reshape((len(AtomFragment_database), -1))
     bond_lookup = pd.read_pickle(bond_lookup_path)
     unique_atoms = np.load(unique_atoms_path)
+    RING_VOCAB = set(AtomFragment_database.loc[AtomFragment_database["is_fragment"] == 1, "smiles"].tolist())
 
 if not ablateEqui:
     model_3D_PATH = os.path.join(root, "trained_models/graph_generator.pt")

@@ -2,7 +2,7 @@
 
 Generates ten molecules matching the three-dimensional shape of a reference compound while allowing the chemistry to change, the essence of ligand-based scaffold hopping. SQUID, from Adams and Coley, uses an equivariant network so that generation respects rotation and translation, conditioning on shape rather than on the molecular graph. Because sampling is stochastic and shape is matched approximately, outputs vary between runs and still require assessment for synthetic feasibility.
 
-This model was incorporated on 2024-05-01.Last packaged on 2026-09-01.
+This model was incorporated on 2024-05-01.Last packaged on 2026-09-23.
 
 ## Information
 ### Identifiers
@@ -50,11 +50,11 @@ Below are the **Output Columns** of the model:
 ### Resource Consumption
 - **Model Size (Mb):** `371`
 - **Environment Size (Mb):** `2608`
-- **Image Size (Mb):** `3044.14`
+- **Image Size (Mb):** `3052.22`
 
 **Computational Performance (seconds):**
-- 10 inputs: `39.76`
-- 100 inputs: `1568.53`
+- 10 inputs: `32.24`
+- 100 inputs: `1487.02`
 - 10000 inputs: `-1`
 
 ### References

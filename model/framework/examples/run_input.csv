@@ -1,3 +1,4 @@
 smiles
-CC[C@@H](C)NS(=O)(=O)c1ccc(F)c(c1)C(=O)Nc1ccc(F)c(F)c1
-C[C@@H](NC(=O)Cc1cccc(O)c1)c1cccc(N2CCCC2)c1
+O=C(/C=C/c1ccccc1F)N1CCN(c2ccccn2)CC1
+O=C(NO)c1nc(-c2ccc(COc3ccc(Cl)cc3)cc2)no1
+CC(C)c1csc(NC(=O)c2cc3c(Cl)cccc3[nH]2)n1

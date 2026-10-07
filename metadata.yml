@@ -2,13 +2,14 @@ Identifier: eos8vud
 Slug: squid
 Status: Ready
 Title: SQUID 3D shape generation
-Description: Generates ten molecules matching the three-dimensional shape of a 
-  reference compound while allowing the chemistry to change, the essence of 
-  ligand-based scaffold hopping. SQUID, from Adams and Coley, uses an 
-  equivariant network so that generation respects rotation and translation, 
-  conditioning on shape rather than on the molecular graph. Because sampling is 
-  stochastic and shape is matched approximately, outputs vary between runs and 
-  still require assessment for synthetic feasibility.
+Description: Generates up to ten molecules that fill the three-dimensional shape of
+  a reference compound while letting the chemistry change, the central move of ligand-based
+  scaffold hopping. SQUID, from Adams and Coley, encodes shape with an equivariant
+  point cloud network, variationally encodes chemical identity and assembles molecules
+  fragment by fragment while scoring rotatable bonds, after training on drug-like
+  molecules from MOSES. Ersilia seeds every sampling attempt, so a given input reproduces,
+  and inputs whose ring systems fall outside the fixed fragment vocabulary return
+  nothing.
 Deployment:
   - Local
 Source: Local
@@ -22,8 +23,8 @@ Output:
   - Compound
 Output Dimension: 10
 Output Consistency: Variable
-Interpretation: Ten generated molecules conditioned to match the 
-  three-dimensional shape of the input.
+Interpretation: Up to ten molecules generated to match the three-dimensional shape
+  of the input, with seeded sampling.
 Tag:
   - Compound generation
 Biomedical Area:

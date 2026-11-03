@@ -1,8 +1,9 @@
 # SQUID 3D shape generation
 
-Generates up to ten molecules that fill the three-dimensional shape of a reference compound while letting the chemistry change, the central move of ligand-based scaffold hopping. SQUID, from Adams and Coley, encodes shape with an equivariant point cloud network, variationally encodes chemical identity and assembles molecules fragment by fragment while scoring rotatable bonds, after training on drug-like molecules from MOSES. Ersilia seeds every sampling attempt, so a given input reproduces, and inputs whose ring systems fall outside the fixed fragment vocabulary return nothing.
+Generates up to ten molecules conditioned on the 3D shape of a reference compound, for ligand-based scaffold hopping. SQUID, from Adams and Coley, encodes the shape of a 3D conformer with an equivariant point cloud network and grows each molecule from a seed fragment of the input, using a fixed vocabulary of 100 ring templates from MOSES. Sampling is stochastic; the input, its stereoisomers, multi-component structures and repeats are removed. Most growth attempts fail, so rows are often short. Inputs with other ring systems, and empty, unparsable or multi-component inputs, return empty rows.
 
-This model was incorporated on 2024-05-01.Last packaged on 2026-09-28.
+This model was incorporated on 2024-05-01.
+Last packaged on 2026-09-28.
 
 ## Information
 ### Identifiers
@@ -23,21 +24,21 @@ This model was incorporated on 2024-05-01.Last packaged on 2026-09-28.
 ### Output
 - **Output Dimension:** `10`
 - **Output Consistency:** `Variable`
-- **Interpretation:** Up to ten molecules generated to match the three-dimensional shape of the input, with seeded sampling.
+- **Interpretation:** Up to ten molecules generated conditioned on the three-dimensional shape of the input.
 
 Below are the **Output Columns** of the model:
 | Name | Type | Direction | Description |
 |------|------|-----------|-------------|
-| smi_0 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_1 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_2 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_3 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_4 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_5 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_6 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_7 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_8 | string |  | This input index was calculated using the pretrained SQUID model |
-| smi_9 | string |  | This input index was calculated using the pretrained SQUID model |
+| smi_0 | string |  | Generated molecule index 0 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_1 | string |  | Generated molecule index 1 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_2 | string |  | Generated molecule index 2 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_3 | string |  | Generated molecule index 3 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_4 | string |  | Generated molecule index 4 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_5 | string |  | Generated molecule index 5 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_6 | string |  | Generated molecule index 6 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_7 | string |  | Generated molecule index 7 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_8 | string |  | Generated molecule index 8 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
+| smi_9 | string |  | Generated molecule index 9 conditioned on the 3D shape of the input (empty if fewer than 10 were found) |
 
 
 ### Source and Deployment

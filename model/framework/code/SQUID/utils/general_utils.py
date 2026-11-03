@@ -3050,8 +3050,7 @@ def generate_2D_mol_from_sequence(
       q += 1
       if q > 30:
         logger("failed to converge")
-        unconverged += 1
-        break
+        raise RuntimeError("failed to converge")
 
   return (
     mol,
@@ -3316,8 +3315,7 @@ def generate_3D_mol_from_sequence(
       q += 1
       if q > 30:
         logger("failed to converge")
-        unconverged += 1
-        break
+        raise RuntimeError("failed to converge")
 
   except Exception as e:
     logger(f"failed to generate: {e}")
@@ -3438,8 +3436,7 @@ def generate_seed_from_sequence(
     q += 1
     if q > 30:
       logger("failed to converge")
-      unconverged += 1
-      break
+      raise RuntimeError("failed to converge")
 
   return (
     mol,

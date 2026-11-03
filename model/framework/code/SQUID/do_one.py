@@ -1,7 +1,5 @@
 import os
 import sys
-import csv
-import json
 import random
 import traceback
 import time
@@ -16,8 +14,6 @@ import rdkit
 from rdkit import Chem, RDLogger
 from rdkit.Geometry import Point3D
 from rdkit.Chem import AllChem
-
-from FPSim2 import FPSim2Engine
 
 from models.vnn.models.vn_layers import *  # noqa: F401,F403
 from models.vnn.models.utils.vn_dgcnn_util import get_graph_feature  # noqa: F401
@@ -49,6 +45,11 @@ interpolate_to_GNN_prior = 1.0
 stop_threshold = 0.01
 variational_GNN_factor = 1.0
 ablateEqui = False
+
+
+class InputLimit(Exception):
+    """The input cannot be grown by this model (no conformer, no seed, ring outside the vocabulary,
+    or no attempt succeeded). The caller reports it as an input limit, not a model failure."""
 
 
 def t():
@@ -224,48 +225,9 @@ def prepare_molecule(smiles, k, seed=0, max_attempts=ETKDG_MAX_ATTEMPTS, max_ite
     return out
 
 
-def is_seedable(smiles):
-    m = norm_mol(Chem.MolFromSmiles(smiles))
-    if m is None:
-        return False
-    try:
-        seeds = get_starting_seeds(m, AtomFragment_database, fragment_library_atom_features, unique_atoms, bond_lookup)
-        seeds = [s for s in seeds if seed_has_bond(m, s)]
-        return len(seeds) > 0
-    except Exception as e:
-        print(f"Does not have seed: {e}")
-        return False
-
-
-def seedable_smiles(smiles, max_scan=2000):
-    if is_seedable(smiles):
-        return smiles
-
-    query = smiles
-    with Timer("FPSim2 similarity"):
-        results = fp0.similarity(query, search_cutoffs["atompair"], n_workers=1)
-        if len(results) == 0:
-            results = fp1.similarity(query, search_cutoffs["morgan"], n_workers=1)
-        if len(results) == 0:
-            results = fp0.similarity(query, 0.0, n_workers=1)
-
-    log(f"[INFO] FPSim2 hits={len(results)}")
-    if len(results) == 0:
-        raise RuntimeError("No similarity search results returned; FPSim2 query failed or DB empty.")
-
-    best_smiles = reference_smiles_list[results[0][0]]
-    scanned = 0
-    for ridx, _ in results:
-        scanned += 1
-        cand = reference_smiles_list[ridx]
-        if is_seedable(cand):
-            log(f"[INFO] replaced unseedable input with seedable reference after scanned={scanned}")
-            return cand
-        if scanned >= max_scan:
-            break
-
-    log(f"[WARN] no seedable found in first {max_scan}; using best_smiles")
-    return best_smiles
+# The FPSim2 fallback that replaced an unparsable or unseedable input by the nearest MOSES
+# molecule was removed: it returned outputs for another compound, and main.py rejects such
+# inputs before they get here.
 
 
 def pick_seeds(mol, seed_base, m_idx, max_seeds_per_conformer):
@@ -420,7 +382,12 @@ def _mol_has_oov_ring_fragment(mol):
     except Exception:
         return False  # let the normal attempt loop handle/report this instead
     for rf in ring_fragments:
-        frag_smi = get_fragment_smiles(mol, list(rf))
+        try:
+            frag_smi = get_fragment_smiles(mol, list(rf))
+        except Exception as e:
+            # e.g. "empty bond indices": the ring system has no single bond to cut, so the
+            # input cannot be split into the model's fragments; it depends only on the input
+            raise InputLimit(f"a ring system of the input cannot be cut into fragments ({e})")
         if frag_smi is None or frag_smi not in RING_VOCAB:
             return True
     return False
@@ -437,38 +404,39 @@ def generate_molecules(
     seed_base=0,
     total_evaluations=DEFAULT_TOTAL_EVALUATIONS,
     debug_every=10,
+    accept=None,
 ):
-    log(f"[INFO] generate_molecules input smiles={smiles}")
+    """Grow up to ``target_samples`` molecules from seed fragments of ``smiles``.
 
-    if Chem.MolFromSmiles(smiles) is None:
-        log("[WARN] RDKit could not parse input; trying FPSim2 replacement")
-        with Timer("get_seedable_smiles"):
-            smiles = seedable_smiles(smiles, max_scan=2000)
-        log(f"[INFO] using smiles={smiles}")
-    else:
-        log("[INFO] RDKit parsed input OK; skipping FPSim2 replacement")
+    ``accept``, if given, maps each new SMILES to the string to keep or to None to drop it;
+    only kept molecules count towards ``target_samples``, so the attempt budget is not spent
+    on molecules a later filter would remove. Raises InputLimit when the input cannot be
+    grown, and RuntimeError when every failed attempt failed in an unexpected way (a sign
+    that the model or its environment is broken, not the input).
+    """
+    log(f"[INFO] generate_molecules input smiles={smiles}")
 
     mol2d = norm_mol(Chem.MolFromSmiles(smiles))
     if mol2d is None:
-        log("[ERROR] could not create mol2d after parse")
-        return []
+        raise InputLimit("input could not be parsed or normalised")
 
     if _mol_has_oov_ring_fragment(mol2d):
-        log("[ERROR] input contains a ring system outside the model's fixed "
-            f"{len(RING_VOCAB)}-fragment vocabulary; every growth attempt would "
-            "fail identically (confirmed empirically) - skipping the retry loop.")
-        return []
+        raise InputLimit(
+            f"input has a ring system outside the model's {len(RING_VOCAB)} ring templates"
+        )
 
     with Timer("prepare_molecule"):
         mols = prepare_molecule(smiles, int(n_conformers), seed=seed_base, pick_best=False)
     if len(mols) == 0:
-        log("[ERROR] No 3D conformers could be prepared.")
-        return []
+        raise InputLimit("no 3D conformer could be prepared")
 
     seen = set()
     unique = []
     total_attempts = 0
     total_failures = 0
+    unexpected_failures = 0
+    first_unexpected = None
+    grown = 0
     last_error = None
     file_idx = 0
 
@@ -532,15 +500,23 @@ def generate_molecules(
                         smi = canon(Chem.MolToSmiles(updated_mol))
                         if smi and smi not in seen:
                             seen.add(smi)
-                            unique.append(smi)
-                            log(f"[OK] sample {len(unique)}/{target_samples}: {smi}")
+                            grown += 1
+                            kept = accept(smi) if accept is not None else smi
+                            if kept is not None:
+                                unique.append(kept)
+                                log(f"[OK] sample {len(unique)}/{target_samples}: {kept}")
 
                 except Exception as e:
                     total_failures += 1
                     last_error = e
+                    # the growth code signals a failed attempt with RuntimeError; anything else is unexpected
+                    if not isinstance(e, RuntimeError):
+                        unexpected_failures += 1
+                        first_unexpected = first_unexpected or e
                     if total_failures <= 3 or (debug_every > 0 and total_failures % debug_every == 0):
                         log(f"[ERROR] attempt failed (failures={total_failures}, attempts={total_attempts}) {type(e).__name__}: {e}")
-                        traceback.print_exc()
+                        # failed attempts are routine: keep their traces in the log, off stderr
+                        traceback.print_exc(file=sys.stdout)
 
         file_idx += 1
         if file_idx >= total_evaluations:
@@ -552,6 +528,18 @@ def generate_molecules(
     log(f"[INFO] unique_smiles={len(unique)}")
     if len(unique) == 0 and last_error is not None:
         log(f"[ERROR] last_error={type(last_error).__name__}: {last_error}")
+
+    if not unique:
+        if total_failures and unexpected_failures == total_failures:
+            raise RuntimeError(
+                f"all {total_failures} attempts failed unexpectedly, first: "
+                f"{type(first_unexpected).__name__}: {first_unexpected}"
+            )
+        if total_attempts == 0:
+            raise InputLimit("no seed fragment could be placed on any conformer")
+        if grown:
+            raise InputLimit(f"all {grown} grown molecules were removed by the output checks")
+        raise InputLimit(f"no growth attempt succeeded ({total_attempts} attempts)")
 
     return unique
 
@@ -605,33 +593,6 @@ if not os.path.exists(model_3D_PATH):
     raise FileNotFoundError(f"Missing model checkpoint: {model_3D_PATH}")
 if not os.path.exists(rocs_model_3D_PATH):
     raise FileNotFoundError(f"Missing ROCS checkpoint: {rocs_model_3D_PATH}")
-
-fp0_filename = os.path.join(CHECKPOINTS_DIR, "atompair_fps.h5")
-fp1_filename = os.path.join(CHECKPOINTS_DIR, "morgan_fps.h5")
-if not os.path.exists(fp0_filename):
-    raise FileNotFoundError(f"Missing FPSim2 DB: {fp0_filename}")
-if not os.path.exists(fp1_filename):
-    raise FileNotFoundError(f"Missing FPSim2 DB: {fp1_filename}")
-
-with Timer("load FPSim2 DBs"):
-    fp0 = FPSim2Engine(fp0_filename)
-    fp1 = FPSim2Engine(fp1_filename)
-
-cutoff_path = os.path.join(CHECKPOINTS_DIR, "reasonable_fp_cutoffs.json")
-ref_path = os.path.join(CHECKPOINTS_DIR, "reference_smiles.txt")
-if not os.path.exists(cutoff_path):
-    raise FileNotFoundError(f"Missing: {cutoff_path}")
-if not os.path.exists(ref_path):
-    raise FileNotFoundError(f"Missing: {ref_path}")
-
-with Timer("load similarity cutoffs + reference smiles"):
-    with open(cutoff_path, "r") as f:
-        search_cutoffs = json.load(f)
-    reference_smiles_list = []
-    with open(ref_path, "r") as f:
-        for r in csv.reader(f):
-            if r and r[0]:
-                reference_smiles_list.append(r[0])
 
 pointCloudVar = 1.0 / (12.0 * 1.7)
 rocs_pointCloudVar = 1.0 / (12.0 * 1.7)

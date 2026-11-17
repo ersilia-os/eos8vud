@@ -26,8 +26,12 @@ class RowFailed(Exception):
     """A row that could not be filled.
 
     ``kind`` is "input" when the input is the cause (unusable input, or one the model
-    cannot grow) and "model" otherwise. The run exits non-zero only if every row failed
-    and one of them is a "model" failure.
+    cannot grow) and "model" otherwise. Either way the row is left empty and the run
+    exits 0. Ersilia already reports empty rows (and exits 3 when no input could be
+    processed); a non-zero exit here only turns the request into a 500, after which
+    Ersilia re-runs the batch in halves down to single inputs to get the same empty
+    rows. A broken environment still fails loudly: the model and checkpoints load at
+    import, before any row is processed.
     """
 
     def __init__(self, kind, message):
@@ -125,14 +129,13 @@ def main():
         w.writerow(header)
         w.writerows(rows)
 
-    # a file of inputs the model cannot use is a valid (empty) answer; a broken model is not
     model_errors = [m for kind, m in failed if kind == "model"]
-    if rows and len(failed) == len(rows) and model_errors:
+    if model_errors:
         print(
-            f"[ERROR] every input failed, first model error: {model_errors[0]}",
+            f"[WARN] {len(model_errors)} of {len(rows)} rows failed inside the model, "
+            f"first: {model_errors[0]}",
             file=sys.stderr,
         )
-        sys.exit(1)
 
 
 if __name__ == "__main__":

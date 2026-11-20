@@ -582,12 +582,10 @@ with Timer("load fragment libraries"):
     unique_atoms = np.load(unique_atoms_path)
     RING_VOCAB = set(AtomFragment_database.loc[AtomFragment_database["is_fragment"] == 1, "smiles"].tolist())
 
-if not ablateEqui:
-    model_3D_PATH = os.path.join(root, "trained_models/graph_generator.pt")
-    rocs_model_3D_PATH = os.path.join(root, "trained_models/scorer.pt")
-else:
-    model_3D_PATH = os.path.join(root, "trained_models/graph_generator_ablateEqui.pt")
-    rocs_model_3D_PATH = os.path.join(root, "trained_models/scorer_ablateEqui.pt")
+if ablateEqui:
+    raise ValueError("ablateEqui models are not shipped with this model")
+model_3D_PATH = os.path.join(CHECKPOINTS_DIR, "graph_generator.pt")
+rocs_model_3D_PATH = os.path.join(CHECKPOINTS_DIR, "scorer.pt")
 
 if not os.path.exists(model_3D_PATH):
     raise FileNotFoundError(f"Missing model checkpoint: {model_3D_PATH}")

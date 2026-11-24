@@ -102,53 +102,6 @@ def canon(s):
         return None
 
 
-def seed_has_bond(m, seed):
-    if m is None or not isinstance(seed, (list, tuple)) or len(seed) < 2:
-        return False
-    try:
-        ss = set(int(i) for i in seed)
-    except Exception:
-        return False
-    for b in m.GetBonds():
-        a1 = b.GetBeginAtomIdx()
-        a2 = b.GetEndAtomIdx()
-        if a1 in ss and a2 in ss:
-            return True
-    return False
-
-
-def fallback_seeds(m, max_seeds=64):
-    if m is None:
-        return []
-    seeds = []
-    seen = set()
-    for b in m.GetBonds():
-        u = b.GetBeginAtomIdx()
-        v = b.GetEndAtomIdx()
-        s = tuple(sorted((u, v)))
-        if s not in seen:
-            seeds.append(list(s))
-            seen.add(s)
-        if len(seeds) >= max_seeds:
-            return seeds
-    for v in range(m.GetNumAtoms()):
-        nbrs = [n.GetIdx() for n in m.GetAtomWithIdx(v).GetNeighbors()]
-        if len(nbrs) < 2:
-            continue
-        for i in range(len(nbrs)):
-            for j in range(i + 1, len(nbrs)):
-                u, w = nbrs[i], nbrs[j]
-                s = tuple(sorted((u, v, w)))
-                if s in seen:
-                    continue
-                if seed_has_bond(m, s):
-                    seeds.append(list(s))
-                    seen.add(s)
-                if len(seeds) >= max_seeds:
-                    return seeds
-    return seeds
-
-
 def prepare_molecule(smiles, k, seed=0, max_attempts=ETKDG_MAX_ATTEMPTS, max_iters=MMFF_MAX_ITERS, pick_best=False):
     log(f"[INFO] prepare_molecule smiles={smiles} n={k} pick_best={pick_best}")
     mol0 = Chem.MolFromSmiles(smiles)
@@ -239,13 +192,12 @@ def pick_seeds(mol, seed_base, m_idx, max_seeds_per_conformer):
         log(f"[WARN] get_starting_seeds crashed ({type(e).__name__}: {e})")
         traceback.print_exc()
 
-    seeds = [s for s in (seeds or []) if seed_has_bond(mol, s)]
-    log(f"[INFO] seeds with >=1 bond after filter: {len(seeds)}")
-
-    if len(seeds) == 0:
-        log("[WARN] No valid seeds from get_starting_seeds; using fallback_connected_seeds")
-        seeds = fallback_seeds(mol, max_seeds=max(32, int(max_seeds_per_conformer) * 8))
-        log(f"[INFO] fallback seeds produced: {len(seeds)}")
+    # Use only the seeds SQUID proposes (terminal atoms and terminal ring fragments), as in the
+    # upstream evaluation script. With none, the conformer is skipped; with none on any
+    # conformer, generate_molecules raises InputLimit and the row is empty. A former
+    # seed_has_bond filter dropped every SQUID seed and a fallback grew from arbitrary bonds.
+    seeds = list(seeds or [])
+    log(f"[INFO] terminal seeds from get_starting_seeds: {len(seeds)}")
 
     if len(seeds) == 0:
         return []
@@ -329,8 +281,11 @@ def transfer_coords(mol, seed_mol, idx_map, final_partial_indices):
 
 
 def run_growth(sequence, seed_mol, mol_target, positioned, queue, atom_to_lib):
+    # The seed already contains the ground-truth sequence (generate_seed_from_sequence), so the
+    # growth starts with an empty sequence, as in upstream SQUID. Replaying the sequence on top
+    # of the seed attached the same atoms twice (valence errors).
     _, updated_mol, _, _, _, _, _, _, _, _ = generate_3D_mol_from_sequence(
-        sequence=sequence,
+        sequence=[],
         partial_mol=deepcopy(seed_mol),
         mol=deepcopy(mol_target),
         positioned_atoms_indices=deepcopy(positioned),
@@ -393,6 +348,26 @@ def _mol_has_oov_ring_fragment(mol):
     return False
 
 
+def _mol_has_oov_atom(mol):
+    """True if an atom outside the ring systems has an atom type the model does not know.
+
+    process_mol encodes the target by looking up each such atom's features in the fragment
+    library (exact match); with no match every attempt fails with an IndexError, whatever the
+    conformer or seed (for example thioamide C=S).
+    """
+    try:
+        ring_atoms = set().union(*[set(r) for r in get_ring_fragments(mol)])
+        features = getNodeFeatures(mol.GetAtoms())
+    except Exception:
+        return False
+    for i in range(mol.GetNumAtoms()):
+        if i in ring_atoms:
+            continue
+        if not np.any(np.all(fragment_library_atom_features == features[i], axis=1)):
+            return True
+    return False
+
+
 def generate_molecules(
     smiles,
     device=torch.device("cpu"),
@@ -424,6 +399,8 @@ def generate_molecules(
         raise InputLimit(
             f"input has a ring system outside the model's {len(RING_VOCAB)} ring templates"
         )
+    if _mol_has_oov_atom(mol2d):
+        raise InputLimit("input has an atom type outside the model's atom vocabulary")
 
     with Timer("prepare_molecule"):
         mols = prepare_molecule(smiles, int(n_conformers), seed=seed_base, pick_best=False)
@@ -536,7 +513,7 @@ def generate_molecules(
                 f"{type(first_unexpected).__name__}: {first_unexpected}"
             )
         if total_attempts == 0:
-            raise InputLimit("no seed fragment could be placed on any conformer")
+            raise InputLimit("SQUID proposed no starting seed on any conformer")
         if grown:
             raise InputLimit(f"all {grown} grown molecules were removed by the output checks")
         raise InputLimit(f"no growth attempt succeeded ({total_attempts} attempts)")

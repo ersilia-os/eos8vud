@@ -3,7 +3,7 @@
 Generates up to ten molecules conditioned on the 3D shape of a reference compound, for ligand-based scaffold hopping. SQUID, from Adams and Coley, encodes the shape of a 3D conformer with an equivariant point cloud network and grows each molecule from a seed fragment of the input, using a fixed vocabulary of 100 ring templates from MOSES. Sampling is stochastic; the input, its stereoisomers, multi-component structures and repeats are removed. Most growth attempts fail, so rows are often short. Inputs with other ring systems, and empty, unparsable or multi-component inputs, return empty rows.
 
 This model was incorporated on 2024-05-01.
-Last packaged on 2026-09-28.
+Last packaged on 2026-11-24.
 
 ## Information
 ### Identifiers
@@ -51,11 +51,11 @@ Below are the **Output Columns** of the model:
 ### Resource Consumption
 - **Model Size (Mb):** `50`
 - **Environment Size (Mb):** `2451`
-- **Image Size (Mb):** `3052.22`
+- **Image Size (Mb):** `832.68`
 
 **Computational Performance (seconds):**
-- 10 inputs: `31.17`
-- 100 inputs: `1512.13`
+- 10 inputs: `30.85`
+- 100 inputs: `993.36`
 - 10000 inputs: `-1`
 
 ### References

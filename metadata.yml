@@ -40,7 +40,7 @@ Source Code: https://github.com/keiradams/SQUID
 License: MIT
 Contributor: miquelduranfrigola
 Incorporation Date: '2024-05-01'
-Last Packaging Date: '2026-09-28'
+Last Packaging Date: '2026-11-24'
 Release: v3.0.0
 S3: https://ersilia-models-zipped.s3.eu-central-1.amazonaws.com/eos8vud.zip
 DockerHub: https://hub.docker.com/r/ersiliaos/eos8vud
@@ -49,10 +49,10 @@ Docker Architecture:
   - ARM64
 Model Size: 50.0
 Environment Size: 2451.0
-Image Size: 3052.22
-Computational Performance 1: 31.17
-Computational Performance 2: 195.23
-Computational Performance 3: 1512.13
+Image Size: 832.68
+Computational Performance 1: 30.85
+Computational Performance 2: 76.42
+Computational Performance 3: 993.36
 Computational Performance 4: -1.0
 Computational Performance 5: -1.0
 Mode: Pretrained

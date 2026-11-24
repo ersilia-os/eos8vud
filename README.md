@@ -24,7 +24,7 @@ Last packaged on 2026-09-28.
 ### Output
 - **Output Dimension:** `10`
 - **Output Consistency:** `Variable`
-- **Interpretation:** Up to ten molecules generated conditioned on the three-dimensional shape of the input.
+- **Interpretation:** Up to ten molecules generated conditioned on the three-dimensional shape of the input. Works best for small molecules (up to about 27 heavy atoms); larger inputs tend to give smaller molecules. Output SMILES carry no stereochemistry.
 
 Below are the **Output Columns** of the model:
 | Name | Type | Direction | Description |

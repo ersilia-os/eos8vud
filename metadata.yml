@@ -47,6 +47,7 @@ DockerHub: https://hub.docker.com/r/ersiliaos/eos8vud
 Docker Architecture:
   - AMD64
   - ARM64
+Apptainer: https://models-sif.s3.eu-north-1.amazonaws.com/eos8vud_v4.sif
 Model Size: 50.0
 Environment Size: 2451.0
 Image Size: 832.68
